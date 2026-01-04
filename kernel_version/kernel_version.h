@@ -10,22 +10,11 @@
 #include <hook.h>
 #include <kpmodule.h>
 #include <ksyms.h>
-#include <linux/string.h>
-#include <linux/version.h>
-#include <linux/slab.h>
-#include <linux/uaccess.h>
+#include <linux.h>
+#include <uapi.h>
 
 #define KERNEL_VERSION_MAX_LEN 128
 #define KERNEL_VERSION_BUF_SIZE 256
-
-// 内核版本字符串结构
-struct version_info {
-    char *version_str;          // 指向内核版本字符串的指针
-    char *original_version;     // 保存原始版本字符串的备份
-    size_t max_len;             // 缓冲区最大长度
-    bool is_hooked;             // 是否已经hook
-    bool is_modified;           // 是否已经修改
-};
 
 // 日志宏
 #define logkm(fmt, ...) printk("kernel_version_mod: " fmt, ##__VA_ARGS__)
@@ -61,20 +50,13 @@ struct version_info {
         logk_info("unhook %s success\n", #func);           \
     }
 
-// 内核版本相关函数声明
-extern char *linux_banner;
-extern char linux_proc_banner[];
-extern int kernel_version;
-extern unsigned int kernel_version_code;
-
 // 模块全局变量
-extern struct version_info ver_info;
 extern char custom_version[KERNEL_VERSION_MAX_LEN];
 extern bool version_modified;
+extern char *original_version;
 
 // 函数声明
 int init_version_strings(void);
-void cleanup_version_strings(void);
 int hook_version_functions(void);
 void unhook_version_functions(void);
 int set_kernel_version(const char *new_version);
