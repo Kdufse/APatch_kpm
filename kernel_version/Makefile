@@ -31,20 +31,20 @@ INCLUDE_DIRS := . include patch/include linux/include linux/arch/arm64/include l
 
 INCLUDE_FLAGS := $(foreach dir,$(INCLUDE_DIRS),-I$(KP_DIR)/kernel/$(dir))
 
-objs := dont_kill_freeze.c
+objs :=kernel_version.c
 
 all: base
 
-base: dont_kill_freeze_$(MYKPM_VERSION).kpm
+base: kernel_version_$(MYKPM_VERSION).kpm
 
 debug: CFLAGS += -DCONFIG_DEBUG
 debug: MYKPM_VER := _d
-debug: dont_kill_freeze_$(MYKPM_VERSION)_debug.kpm
+debug: kernel_version_$(MYKPM_VERSION)_debug.kpm
 
-dont_kill_freeze_$(MYKPM_VERSION).kpm: ${objs}
+kernel_version_$(MYKPM_VERSION).kpm: ${objs}
 	${CC} $(CFLAGS) $(CFLAG) $(INCLUDE_FLAGS) $^ -r -o $@
 
-dont_kill_freeze_$(MYKPM_VERSION)_debug.kpm: ${objs}
+kernel_version_$(MYKPM_VERSION)_debug.kpm: ${objs}
 	${CC} $(CFLAGS) $(CFLAG) $(INCLUDE_FLAGS) $^ -r -o $@
 
 .PHONY: clean
